@@ -32,11 +32,9 @@ func tcp4PacketMutateIPFields(srcIPPort, dstIPPort netip.AddrPort, flags header.
 	totalLen := 40 + segmentSize
 	b := make([]byte, offset+int(totalLen), 65535)
 	ipv4H := header.IPv4(b[offset:])
-	srcAs4 := srcIPPort.Addr().As4()
-	dstAs4 := dstIPPort.Addr().As4()
 	ipFields := &header.IPv4Fields{
-		SrcAddr:     tcpip.Address(srcAs4[:]),
-		DstAddr:     tcpip.Address(dstAs4[:]),
+		SrcAddr:     tcpip.AddrFrom4(srcIPPort.Addr().As4()),
+		DstAddr:     tcpip.AddrFrom4(dstIPPort.Addr().As4()),
 		Protocol:    unix.IPPROTO_TCP,
 		TTL:         64,
 		TotalLength: uint16(totalLen),
@@ -69,11 +67,9 @@ func tcp6PacketMutateIPFields(srcIPPort, dstIPPort netip.AddrPort, flags header.
 	totalLen := 60 + segmentSize
 	b := make([]byte, offset+int(totalLen), 65535)
 	ipv6H := header.IPv6(b[offset:])
-	srcAs16 := srcIPPort.Addr().As16()
-	dstAs16 := dstIPPort.Addr().As16()
 	ipFields := &header.IPv6Fields{
-		SrcAddr:           tcpip.Address(srcAs16[:]),
-		DstAddr:           tcpip.Address(dstAs16[:]),
+		SrcAddr:           tcpip.AddrFrom16(srcIPPort.Addr().As16()),
+		DstAddr:           tcpip.AddrFrom16(dstIPPort.Addr().As16()),
 		TransportProtocol: unix.IPPROTO_TCP,
 		HopLimit:          64,
 		PayloadLength:     uint16(segmentSize + 20),
